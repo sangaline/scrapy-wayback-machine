@@ -11,7 +11,7 @@ It's a command-line utility that uses the middleware provided here to crawl thro
 It's highly configurable in terms of what it scrapes but it only saves the unparsed content of the pages on the site.
 This may or may not suit your needs.
 
-If you're using [Scrapy](https://scrapy.org) already or interested in parsing the data that is crawled then this `WaybaclMachineMiddleware` is probably what you want.
+If you're using [Scrapy](https://scrapy.org) already or interested in parsing the data that is crawled then this `WaybackMachineMiddleware` is probably what you want.
 This middleware handles all of the tricky parts and passes normal `response` objects to your [Scrapy](https://scrapy.org) spiders with archive timestamp information attached.
 The middleware is very unobtrusive and should work seamlessly with existing [Scrapy](https://scrapy.org) middlewares, extensions, and spiders.
 
@@ -29,7 +29,7 @@ To enable the middleware you simply have to add
 
 ```python
 DOWNLOADER_MIDDLEWARES = {
-    'wayback_machine_scraper.middleware.WaybackMachine': 5,
+    'scrapy_wayback_machine.WaybackMachineMiddleware    ': 5,
 }
 
 WAYBACK_MACHINE_TIME_RANGE = (start_time, end_time)
