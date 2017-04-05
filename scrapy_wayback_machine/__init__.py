@@ -9,7 +9,7 @@ from scrapy.exceptions import NotConfigured, IgnoreRequest
 class UnhandledIgnoreRequest(IgnoreRequest):
     pass
 
-class WaybackMachine:
+class WaybackMachineMiddleware:
     cdx_url_template = ('http://web.archive.org/cdx/search/cdx?url={url}'
                     '&output=json&fl=timestamp,original,statuscode,digest')
     snapshot_url_template = 'http://web.archive.org/web/{timestamp}id_/{original}'
