@@ -1,4 +1,4 @@
-![The Wayback Machine Scraper Logo](img/logo.png)
+![The Scrapy Wayback Machine Logo](img/logo.png)
 
 # Scrapy Wayback Machine Middleware
 
