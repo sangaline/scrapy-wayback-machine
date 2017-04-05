@@ -46,8 +46,10 @@ If you need to access either the time of the snapshot or the [archive.org](http:
 Namely, `response.meta['wayback_machine_time']` contains a `datetime.datetime` corresponding to the time of the crawl and `response.meta['wayback_machine_url']` contains the actual URL that was requested.
 Unless you're scraping a single point in time, you will almost certainly want to include the timestamp in the items that your spiders produce to differentiate items scraped from the same URL.
 
-### Example
+### Examples
 
 [The Wayback Machine Scraper](https://github.com/sangaline/wayback-machine-scraper) command-line utility is a good example of how to use the middleware.
 The necessary settings are defined in [\_\_main\_\_.py](https://github.com/sangaline/wayback_machine_scraper/scraper/__main__.py) and the handling of responses is done in [mirror_spider.py](https://github.com/sangaline/wayback_machine_scraper/scraper/mirror_spider.py).
 The `MirrorSpider` class simply uses the `response.meta['wayback_machine_time']` information attached to each response to construct the snapshot filenames and is otherwise a fairly generic spider.
+
+There's also an article [Internet Archeology: Scraping time series data from Archive.org](http://sangaline.com/post/wayback-machine-scraper/) that discusses the development of the middleware and includes an example of scraping time series data from [Reddit](https://reddit.com).
