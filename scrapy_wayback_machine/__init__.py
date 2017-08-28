@@ -2,6 +2,8 @@ import json
 from datetime import datetime, timezone
 from urllib.request import pathname2url
 
+import urllib
+
 from scrapy import Request
 from scrapy.http import Response
 from scrapy.exceptions import NotConfigured, IgnoreRequest
@@ -88,7 +90,7 @@ class WaybackMachineMiddleware:
         return response
 
     def build_cdx_request(self, request):
-        cdx_url = self.cdx_url_template.format(url=pathname2url(request.url))
+        cdx_url = self.cdx_url_template.format(url=urllib.parse.quote_plus(request.url))
         cdx_request = Request(cdx_url)
         cdx_request.meta['wayback_machine_original_request'] = request
         cdx_request.meta['wayback_machine_cdx_request'] = True
