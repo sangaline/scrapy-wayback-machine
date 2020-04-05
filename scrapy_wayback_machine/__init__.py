@@ -10,10 +10,10 @@ class UnhandledIgnoreRequest(IgnoreRequest):
     pass
 
 class WaybackMachineMiddleware:
-    cdx_url_template = ('http://web.archive.org/cdx/search/cdx?url={url}'
+    cdx_url_template = ('https://web.archive.org/cdx/search/cdx?url={url}'
                     '&output=json&fl=timestamp,original,statuscode,digest')
-    snapshot_url_template = 'http://web.archive.org/web/{timestamp}id_/{original}'
-    robots_txt = 'http://web.archive.org/robots.txt'
+    snapshot_url_template = 'https://web.archive.org/web/{timestamp}/{original}'
+    robots_txt = 'https://web.archive.org/robots.txt'
     timestamp_format = '%Y%m%d%H%M%S'
 
     def __init__(self, crawler):
