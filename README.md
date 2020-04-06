@@ -29,7 +29,7 @@ To enable the middleware you simply have to add
 
 ```python
 DOWNLOADER_MIDDLEWARES = {
-    'scrapy_wayback_machine.WaybackMachineMiddleware    ': 5,
+    'scrapy_wayback_machine.WaybackMachineMiddleware': 5,
 }
 
 WAYBACK_MACHINE_TIME_RANGE = (start_time, end_time)
