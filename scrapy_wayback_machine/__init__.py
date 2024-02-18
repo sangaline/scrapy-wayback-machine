@@ -191,7 +191,7 @@ class WaybackMachineMiddleware:
 
             filtered_snapshots.append(snapshot)
 
-        if not self.fetch_latest_only:
-            return filtered_snapshots
-        else:
+        if self.fetch_latest_only and len(filtered_snapshots):
             return [filtered_snapshots[-1]]
+        else:
+            return filtered_snapshots
