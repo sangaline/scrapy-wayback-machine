@@ -29,6 +29,8 @@ class WaybackMachineMiddleware:
             raise NotConfigured
         self.set_time_range(time_range)
 
+        self.fetch_latest_only = True if crawler.settings.get('WAYBACK_MACHINE_LATEST_ONLY') == True else False
+
     def set_time_range(self, time_range):
         # allow a single time to be passed in place of a range
         if type(time_range) not in [tuple, list]:
@@ -80,7 +82,7 @@ class WaybackMachineMiddleware:
 
             # schedule all of the snapshots
             for snapshot_request in snapshot_requests:
-                self.crawler.engine.schedule(snapshot_request, spider)
+                self.crawler.engine.crawl(snapshot_request)
 
             # abort this request
             raise UnhandledIgnoreRequest
@@ -189,4 +191,7 @@ class WaybackMachineMiddleware:
 
             filtered_snapshots.append(snapshot)
 
-        return filtered_snapshots
+        if self.fetch_latest_only and len(filtered_snapshots):
+            return [filtered_snapshots[-1]]
+        else:
+            return filtered_snapshots
