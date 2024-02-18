@@ -15,7 +15,8 @@ class UnhandledIgnoreRequest(IgnoreRequest):
 
 class WaybackMachineMiddleware:
     cdx_url_template = ('https://web.archive.org/cdx/search/cdx?url={url}'
-                    '&output=json&fl=timestamp,original,statuscode,digest')
+                    '&output=json&fl={fields}')
+    cdx_fields = ['timestamp','original','statuscode','digest']
     snapshot_url_template = 'https://web.archive.org/web/{timestamp}id_/{original}'
     robots_txt = 'https://web.archive.org/robots.txt'
     timestamp_format = '%Y%m%d%H%M%S'
@@ -28,6 +29,13 @@ class WaybackMachineMiddleware:
         if not time_range:
             raise NotConfigured
         self.set_time_range(time_range)
+
+        # If the WAYBACK_MACHINE_FIELDS settings has not been defined,
+        # we default to the existing value
+        extra_fields = crawler.settings.get('WAYBACK_MACHINE_FIELDS', self.cdx_fields)
+
+        # Merge the new values in if they are unique
+        self.cdx_fields.extend(f for f in extra_fields if f not in self.cdx_fields)
 
     def set_time_range(self, time_range):
         # allow a single time to be passed in place of a range
@@ -93,9 +101,16 @@ class WaybackMachineMiddleware:
 
     def build_cdx_request(self, request):
         if os.name == 'nt':
-            cdx_url = self.cdx_url_template.format(url=pathname2url(request.url.split('://')[1]))
+            cdx_url = pathname2url(request.url.split('://')[1])
         else:
-            cdx_url = self.cdx_url_template.format(url=pathname2url(request.url))
+            cdx_url = pathname2url(request.url)
+
+
+        cdx_url = self.cdx_url_template.format(
+            url = cdx_url,
+            fields = ','.join(self.cdx_fields)
+        )
+
         cdx_request = Request(cdx_url)
         cdx_request.meta['wayback_machine_original_request'] = request
         cdx_request.meta['wayback_machine_cdx_request'] = True
@@ -141,6 +156,15 @@ class WaybackMachineMiddleware:
                 'wayback_machine_url': snapshot_request.url,
                 'wayback_machine_time': snapshot['datetime'],
             })
+
+            # Add snapshot metadata into the request object
+            for k,v in snapshot.items():
+                if k in ['datetime', 'timestamp', 'statuscode']:
+                    continue
+
+                snapshot_request.meta.update({
+                    'wayback_machine_' + k: v
+                })
 
             snapshot_requests.append(snapshot_request)
 
